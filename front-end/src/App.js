@@ -4,8 +4,10 @@ import './App.css';
 //import ApiService from './APIService';
 import axios from 'axios'
 import { Form, Icon, Input, Button } from 'antd';
-import FoodForm from "./Component/FoodForm";
-import {Route} from 'react-router-dom';
+import FoodForm from './components/FoodForm';
+import { BrowserRouter, Route, Router, Switch, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+
 
 class App extends Component {
     constructor(props) {
@@ -36,9 +38,8 @@ class App extends Component {
 
             this.addFood(name, cost);
 
-           // return  <Route  to="/components/FoodForm" />
-           //  this.props.history.push('');
         });
+
     }
 
     addFood (foodName, cost) {
@@ -78,6 +79,7 @@ class App extends Component {
             return Object.keys(fieldsError).some(field => fieldsError[field]);
         }
 
+
         return (
                     <Form layout="inline" onSubmit={this.handleSubmit}>
                         <Form.Item validateStatus={foodNameError ? 'error' : ''} help={foodNameError || ''}>
@@ -105,6 +107,12 @@ class App extends Component {
                             <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
                                 Submit
                             </Button>
+
+                            <Router>
+                                <switch>
+                                    <Route exact path='/foodForm' component={FoodForm} />
+                                </switch>
+                            </Router>
                         </Form.Item>
                     </Form>
                 );

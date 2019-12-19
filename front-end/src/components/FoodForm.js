@@ -31,7 +31,8 @@ class FoodForm extends Component {
             let name = values.foodName;
             let cost = values.cost;
 
-            this.addFood(name, cost)
+            this.addFood(name, cost);
+
         });
     }
 
