@@ -32,14 +32,14 @@ public class FoodDeliveryApplication {
 		};
 	}
 */
-
+/*
 	@Bean
 	public CommandLineRunner demo2(@Qualifier("userRepository") UserRepository repository) {
 		return (args) -> {
 			// save a few customers
-			repository.save(new User(1L,"Rose", "1234"));
+			repository.save(new User(2L,"Jack", "1234"));
 			log.info("Stored a User...:");
 		};
-	}
+	}*/
 
 }

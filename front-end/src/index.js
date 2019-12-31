@@ -4,9 +4,27 @@ import App from './App';
 import './index.css';
 import {Form} from "antd";
 import { BrowserRouter, Router, Route, Switch, withRouter,NavLink } from "react-router-dom";
-import FoodForm from "./components/FoodForm";
-import AddFood from "./components/AddFood";
-import HorizontalLoginForm from "./components/login";
+
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+
+
+// optional cofiguration
+const options = {
+  // you can also just use 'bottom center'
+  position: positions.BOTTOM_CENTER,
+  timeout: 5000,
+  offset: '30px',
+  // you can also just use 'scale'
+  transition: transitions.SCALE
+}
+
+const Root = () => (
+  <AlertProvider template={AlertTemplate} {...options}>
+    <App />
+  </AlertProvider>
+)
+
 
 ReactDOM.render(
   <App />,

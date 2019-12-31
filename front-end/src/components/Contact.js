@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Form, Icon, Input, Button } from 'antd';
 import { BrowserRouter, Route, Router, Switch, Link, Redirect } from 'react-router-dom';
 
-const FoodForm = () => {
+const Contact = () => {
     return (
         <div >
             <h1>Contact US</h1>
@@ -13,4 +13,4 @@ const FoodForm = () => {
     );
 }
 
-export default FoodForm;
+export default Contact;

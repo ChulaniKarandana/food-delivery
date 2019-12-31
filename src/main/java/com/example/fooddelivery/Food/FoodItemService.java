@@ -24,11 +24,6 @@ public class FoodItemService implements FoodItemRepository {
     }
 
     @Override
-    public List<FoodItem> findByFoodName(String foodName) {
-        return null;
-    }
-
-    @Override
     public List<FoodItem> findAll() {
         return null;
     }

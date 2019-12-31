@@ -6,10 +6,9 @@ import MyMenu from "./Menu";
 import { BrowserRouter, Route, Router, Switch, Link, Redirect } from 'react-router-dom';
 
 
-class AddFood extends Component {
+class EditFood extends Component {
     constructor(props) {
         super(props);
-        this.state = {foodName: '', cost: '',toForm: false};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,40 +16,55 @@ class AddFood extends Component {
         this.addFood = this.addFood.bind(this);
     }
 
+    componentDidMount() {
+
+    }
+
     handleChange(event) {
         const state = this.state;
         state[event.target.name] = event.target.value;
         this.setState(state);
+
     }
 
     handleSubmit(event) {
         event.preventDefault();
-
+        const datas = this.props.location.state;
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
             }
-
+            let foodId = datas.detail.id;
             let name = values.foodName;
             let cost = values.cost;
+            let user_id = datas.detail.user_id;
 
-            this.addFood(name, cost);
+            this.addFood(foodId,name, cost, user_id);
 
         });
 
 
     }
 
-    addFood (foodName, cost) {
-        const user_id_data = this.props.location.state;
-        console.log(">>>>>>>>>>"+user_id_data.detail);
+
+    navigateToMenu () {
+        const data_to_menu = this.props.location.state;
+        console.log(">>>>>>>>>>>>>>>>>>>"+ data_to_menu.detail);
+        this.props.history.push( {
+                   pathname: "/menu",
+                   state: {user_detail: data_to_menu.detail.id} // your data array of objects
+        });
+    }
+
+    addFood (id,foodName, cost, user_id) {
         axios({
             method: 'post',
             url: 'http://localhost:8080/create',
             data: {
+                id: id,
                 foodName: foodName,
                 cost: cost,
-                user_id: user_id_data.detail
+                user_id: user_id
             },
             headers: {
                 authorization: 'Basic ' + window.btoa("Chulani" + ":" + "1234"),
@@ -63,11 +77,11 @@ class AddFood extends Component {
         }).then(
             success => {
                 console.log(success);
-                this.props.form.resetFields();
-                alert("Successfully Added to Menu");
+                alert("Successfully Updated The Food Details")
             },
             error => {
                 console.log(error);
+                alert("Update Unsuccessful")
             }
         );
     }
@@ -77,7 +91,7 @@ class AddFood extends Component {
         console.log(">>>>>>>>>>>>>>>>>>>"+ data_to_menu.detail);
         this.props.history.push( {
                    pathname: "/menu",
-                   state: {user_detail: data_to_menu.detail} // your data array of objects
+                   state: {user_detail: data_to_menu.detail.user_id} // your data array of objects
         });
     }
 
@@ -92,11 +106,14 @@ class AddFood extends Component {
             return Object.keys(fieldsError).some(field => fieldsError[field]);
         }
 
+        const data = this.props.location.state;
+
+
         return (
             <BrowserRouter>
                 <Form layout="inline" onSubmit={this.handleSubmit}>
                     <Form.Item validateStatus={foodNameError ? 'error' : ''} help={foodNameError || ''}>
-                        {getFieldDecorator('foodName', {
+                        {getFieldDecorator('foodName', {initialValue: data.detail.foodName,}, {
                             rules: [{ required: true, message: 'Please input your food name!' }],
                         })(
                             <Input
@@ -106,13 +123,13 @@ class AddFood extends Component {
                         )}
                     </Form.Item>
                     <Form.Item validateStatus={costError ? 'error' : ''} help={costError || ''}>
-                        {getFieldDecorator('cost', {
+                        {getFieldDecorator('cost', {initialValue: data.detail.cost,}, {
                             rules: [{ required: true, message: 'Please input your Cost for food!' }],
                         })(
                             <Input
                                 prefix={<Icon type="bell" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 type="text"
-                                placeholder="Price"
+                                placeholder="Cost"
                             />,
                         )}
                     </Form.Item>
@@ -123,14 +140,15 @@ class AddFood extends Component {
                         </Button>
                     </Form.Item>
                 </Form>
-        <Button
-            onClick={(e) => { this.navigateToMenu(); }}
-            >
-            Back To Menu
-        </Button>
-        <switch>
-        <Route exact path={'/menu'} component={MyMenu}></Route>
-        </switch>
+            <Button
+                onClick={(e) => { this.navigateToMenu(); }}
+                >
+                Back To Menu
+            </Button>
+            <switch>
+            <Route exact path={'/menu'} component={MyMenu}></Route>
+            </switch>
+
             </BrowserRouter>
 
         );
@@ -138,4 +156,4 @@ class AddFood extends Component {
 
 }
 
-export default Form.create({ name: 'horizontal_login' })(AddFood);
+export default Form.create({ name: 'horizontal_login' })(EditFood);

@@ -16,10 +16,18 @@ public class User {
     @Column (name = "user_password")
     private String userPassword;
 
-    public User (Long userId, String userName, String userPassword) {
+    @Column(name = "user_phone")
+    private String userPhone;
+
+    @Column (name = "user_address")
+    private String userAddress;
+
+    public User (Long userId, String userName, String userPassword, String userPhone, String userAddress) {
         this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
+        this.userPhone = userPhone;
+        this.userAddress = userAddress;
     }
 
     public User () {}
@@ -46,6 +54,23 @@ public class User {
 
     public String getUserPassword() {
         return userPassword;
+    }
+
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public String getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
     }
 
 

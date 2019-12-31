@@ -17,11 +17,14 @@ public class FoodItem implements Serializable {
     @Column (name = "food_cost")
     private float cost;
 
+    @Column (name = "user_id")
+    private Long user_id;
 
-    public FoodItem (Long id, String foodName, float cost) {
+    public FoodItem (Long id, String foodName, float cost, Long user_id) {
         this.id = id;
         this.foodName = foodName;
         this.cost = cost;
+        this.user_id = user_id;
     }
 
     public FoodItem () {}
@@ -48,5 +51,13 @@ public class FoodItem implements Serializable {
 
     public float getCost() {
         return cost;
+    }
+
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 }

@@ -3,14 +3,17 @@ import { Form, Icon, Input, Button } from 'antd';
 import axios from "axios";
 import Logo from "./rest";
 
+
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class HorizontalLoginForm extends React.Component {
+class RegisterForm extends React.Component {
+
     componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
+
     }
 
     handleSubmit = e => {
@@ -22,19 +25,30 @@ class HorizontalLoginForm extends React.Component {
 
             let userName = values.username;
             let userPassword = values.password;
+            let confirmPassword = values.confirmpassword;
+            let phoneNum = values.phone;
+            let address = values.address;
 
-            this.verifyUser(userName, userPassword);
-            //this.routeChange();
+            if (userPassword == confirmPassword) {
+                this.addUser(userName, userPassword, phoneNum, address);
+                this.routeChange();
+            }
+            else {
+                this.stayOnPage();
+            }
+
         });
     };
 
-    verifyUser (userName, userPassword) {
+    addUser (userName, userPassword,phoneNum, address) {
         axios({
             method: 'post',
-            url: 'http://localhost:8080/findUser',
+            url: 'http://localhost:8080/register',
             data: {
                 userName: userName,
-                userPassword: '',
+                userPassword: userPassword,
+                userPhone: phoneNum,
+                userAddress: address
             },
             headers: {
                 authorization: 'Basic ' + window.btoa("Chulani" + ":" + "1234"),
@@ -45,30 +59,22 @@ class HorizontalLoginForm extends React.Component {
                     "Origin, X-Requested-With, Content-Type, Accept"
             }
         }).then(
-            response => {
-            console.log("%%%%%%%%%%%%%%");
-                console.log(response.data[0]);
-                if (userPassword == response.data[0].userPassword) {
-                console.log("Correct");
-                this.props.history.push( {
-                    pathname: "/menu",
-                    state: {user_detail: response.data[0].userId} // your data array of objects
-                });
-                }
+            success => {
+                console.log(success);
             },
             error => {
                 console.log(error);
-                this.stayOnPage();
             }
         );
     }
+
     routeChange () {
-        let path = '/menu';
+        let path = '/login';
         this.props.history.push(path);
     }
 
     stayOnPage () {
-        let path = '/login';
+        let path = '/register';
         this.props.form.resetFields();
     }
 
@@ -78,6 +84,9 @@ class HorizontalLoginForm extends React.Component {
         // Only show error after a field is touched.
         const usernameError = isFieldTouched('username') && getFieldError('username');
         const passwordError = isFieldTouched('password') && getFieldError('password');
+        const confirmError = isFieldTouched('confirmpassword') && getFieldError('confirmpassword');
+        const phoneError = isFieldTouched('phone') && getFieldError('phone');
+        const addressError = isFieldTouched('address') && getFieldError('address');
         return (
             <Form layout="inline" onSubmit={this.handleSubmit} align="center">
             <div><img src={Logo} alt="website logo" style={{width: 200, height: 200}}/></div>
@@ -94,6 +103,31 @@ class HorizontalLoginForm extends React.Component {
                 </Form.Item>
             </li>
             <li>
+                <Form.Item validateStatus={phoneError ? 'error' : ''} help={phoneError || ''}>
+                    {getFieldDecorator('phone', {
+                        rules: [{ required: true, message: 'Please input phone number!' }],
+                    })(
+                        <Input
+                            prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                            placeholder="Phone Number"
+                        />,
+                    )}
+                </Form.Item>
+            </li>
+            <li>
+                <Form.Item validateStatus={addressError ? 'error' : ''} help={addressError || ''}>
+                    {getFieldDecorator('address', {
+                        rules: [{ required: true, message: 'Please input a valid address!' }],
+                    })(
+                        <Input
+                            prefix={<Icon type="bank" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                            placeholder="Restaurant Address"
+                        />,
+                    )}
+                </Form.Item>
+            </li>
+
+            <li>
                 <Form.Item validateStatus={passwordError ? 'error' : ''} help={passwordError || ''}>
                     {getFieldDecorator('password', {
                         rules: [{ required: true, message: 'Please input your Password!' }],
@@ -106,9 +140,22 @@ class HorizontalLoginForm extends React.Component {
                     )}
                 </Form.Item>
             </li>
+            <li>
+                <Form.Item validateStatus={confirmError ? 'error' : ''} help={confirmError || ''}>
+                    {getFieldDecorator('confirmpassword', {
+                         rules: [{ required: true, message: 'Please input your Password!' }],
+                    })(
+                         <Input
+                             prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                             type="password"
+                             placeholder="Confirm Password"
+                          />,
+                    )}
+                 </Form.Item>
+            </li>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-                        Log in
+                        Register
                     </Button>
                 </Form.Item>
             </Form>
@@ -116,6 +163,6 @@ class HorizontalLoginForm extends React.Component {
     }
 }
 
-export default Form.create({ name: 'vertical_login' })(HorizontalLoginForm);
+export default Form.create({ name: 'horizontal_login' })(RegisterForm);
 
 
